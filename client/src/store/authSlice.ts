@@ -7,7 +7,7 @@ export const authSlice = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api/auth`, credentials: "include" }),
     tagTypes: ["User"],
     endpoints: (builder) => ({
-        signUp: builder.mutation<ISignleUserResposne , SignUpForm>({
+        signUp: builder.mutation<ISignleUserResposne, SignUpForm>({
             query: (formData) => ({
                 url: "/signup",
                 method: "POST",
@@ -15,7 +15,7 @@ export const authSlice = createApi({
             }),
             invalidatesTags: ["User"]
         }),
-        signIn: builder.mutation<ISignleUserResposne , SignInForm>({
+        signIn: builder.mutation<ISignleUserResposne, SignInForm>({
             query: (formData) => ({
                 url: "/signin",
                 method: "POST",
@@ -30,7 +30,7 @@ export const authSlice = createApi({
             }),
             invalidatesTags: ["User"],
         }),
-        updateProfile: builder.mutation<IUser, { formData: FormData }>({
+        updateProfile: builder.mutation<IUser, FormData>({
             query: (formData) => ({
                 url: "/profile/update",
                 method: "POST",

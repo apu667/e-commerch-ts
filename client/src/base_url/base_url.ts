@@ -1,1 +1,1 @@
-export const BASE_URL: string = "https://e-commerch-ts-server.onrender.com"
+export const BASE_URL: string = "https://e-commerch-ts.onrender.com"
