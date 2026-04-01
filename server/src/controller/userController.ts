@@ -25,8 +25,10 @@ export const SignUp = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7
-        })
+            secure: false,       // HTTP এর জন্য false
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 দিন
+        });
         return res.status(201).json({
             success: true,
             messsage: "User register successFully",
@@ -58,12 +60,12 @@ export const SignIn = async (req: Request, res: Response) => {
             })
         }
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
-        res.cookie("token", token,
-            {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * 7
-            }
-        )
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,       // HTTP এর জন্য false
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 দিন
+        });
         return res.status(201).json({
             success: true,
             messsage: "User login successFully",
@@ -200,8 +202,8 @@ export const logoutUser = async (req: Request, res: Response) => {
     res.cookie("token", "", {
         httpOnly: true,
         expires: new Date(0), // Expire immediately
-        sameSite: "lax",      // lowercase!
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",      // lowercase!
+        secure: false
     });
 
     res.status(200).json({ message: "Logout successful" });
