@@ -25,9 +25,9 @@ export const SignUp = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,       // HTTP এর জন্য false
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 দিন
+            secure: false,      // HTTP dev
+            sameSite: "lax",    // HTTP dev
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(201).json({
             success: true,
@@ -62,9 +62,9 @@ export const SignIn = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,       // HTTP এর জন্য false
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 দিন
+            secure: false,      // HTTP dev
+            sameSite: "lax",    // HTTP dev
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(201).json({
             success: true,
@@ -202,7 +202,7 @@ export const logoutUser = async (req: Request, res: Response) => {
     res.cookie("token", "", {
         httpOnly: true,
         expires: new Date(0), // Expire immediately
-        sameSite: "strict",      // lowercase!
+        sameSite: "lax",      // lowercase!
         secure: false
     });
 

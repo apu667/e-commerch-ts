@@ -8,9 +8,9 @@ export const router = express.Router();
 
 router.post("/auth/signup", SignUp);
 router.post("/auth/signin", SignIn);
-router.post("/auth/logout",authorization,logoutUser);
+router.post("/auth/logout", authorization, logoutUser);
 
-router.post("/auth/profile/update",authorization,upload.single("profilePic"),updatedUserProfile);
+router.post("/auth/profile/update", authorization, upload.single("profilePic"), updatedUserProfile);
 router.get("/auth/all", allUser);
 router.put("/auth/updated/:id", updatedUser);
 router.delete("/auth/delete/:id", deletedUser);
@@ -37,10 +37,9 @@ router.get(
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: "lax"
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
-
     res.redirect(process.env.FRONTEND_URL || "http://localhost:5173");
   }
 );
