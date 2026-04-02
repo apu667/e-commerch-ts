@@ -17,10 +17,10 @@ interface IDialog {
     open: boolean;
     setOpen: (value: boolean) => void;
     selected: IUser | null;
-    onUpdated?: (user: IUser) => void; // optional callback after update
+    // onUpdated?: (user: IUser) => void; // optional callback after update
 }
 
-const UpdatedUser = ({ open, setOpen, selected, onUpdated }: IDialog) => {
+const UpdatedUser = ({ open, setOpen, selected }: IDialog) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState<"user" | "admin">("user");
@@ -43,19 +43,25 @@ const UpdatedUser = ({ open, setOpen, selected, onUpdated }: IDialog) => {
         if (!selected) return;
 
         try {
-            const formData = {
-                name,
-                email,
-                role,
-                activeAccount,
-            };
+            // const formData = {
+            //     name,
+            //     email,
+            //     role,
+            //     activeAccount,
+            // };
 
-            const result = await updatedUser({ id: selected._id, formData }).unwrap();
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("role", role);
+            formData.append("activeAccount", String(activeAccount)); // ✅ FIX
 
-            console.log("User updated:", result);
+            const res = await updatedUser({ id: selected._id, formData }).unwrap();
+
+            console.log("User updated:", res);
 
             // Optional callback to update parent state
-            onUpdated && onUpdated(result);
+            // onUpdated && onUpdated(res.user);
 
             setOpen(false); // close modal
         } catch (err) {

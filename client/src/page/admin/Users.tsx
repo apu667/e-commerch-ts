@@ -31,7 +31,7 @@ const Users = () => {
     setOpen(true)
   }
   const handleDelete = async (id: string) => {
-    await deletedUser(id)
+    await deletedUser({ id })
   }
 
   return (
