@@ -17,9 +17,9 @@ const Product = () => {
 
     const handleAddToCart = (product: CartItem) => {
         dispatch(addToCart({
-            _id: product._id,        // যদি _id না থাকে, name use করা যাবে কিন্তু unique হোক
+            _id: product._id,        
             name: product.name,
-            images: product.images[0],  // main image
+            images: product.images[0], 
             price: product.price,
             quantity: 1,
         }));

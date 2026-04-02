@@ -9,7 +9,7 @@ export const orderSlice = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
-    getAllOrder: builder.query<Order[], void>({
+    getAllOrder: builder.query<IOrderResponse, void>({
       query: () => "/all",
     }),
     getUserOrder: builder.query<Order[], void>({

@@ -81,7 +81,7 @@ export interface Address {
 export interface Order {
   _id: string;
   user: User;
-  products: Product[];
+  products: OrderProduct[];
   totalQuantity: number;
   totalPrice: number;
   paymentStatus: string;
@@ -95,6 +95,11 @@ export interface OrderResponse {
   orders: Order[];
   totalRevenue: number,
   totalShipments: number,
+}
+export interface IOrderResponse {
+  orders: Order[];
+  totalRevenue?: number;
+  totalShipments?: number;
 }
 
 export interface Catagory {
@@ -119,10 +124,15 @@ export interface IUser {
   role: "user" | "admin";
   createdAt: string;
   updatedAt: string;
+  message: string
 }
 
 export interface IUserResponse {
   user: IUser[]
+}
+export interface IUserProfile {
+  user: IUser,
+  message:string
 }
 
 export interface ISignleUserResposne {

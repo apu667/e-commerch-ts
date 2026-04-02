@@ -1,17 +1,21 @@
 import { BASE_URL } from '@/base_url/base_url';
-import type { ISignleUserResposne, IUser, IUserResponse, SignInForm, SignUpForm } from '@/types';
+import type { ISignleUserResposne, IUser, IUserProfile, IUserResponse, SignInForm, SignUpForm } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const authSlice = createApi({
     reducerPath: "auth",
-    baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api/auth`, credentials: "include" }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: `${BASE_URL}/api/auth`,
+        credentials: "include"
+    }),
     tagTypes: ["User"],
     endpoints: (builder) => ({
         signUp: builder.mutation<ISignleUserResposne, SignUpForm>({
             query: (formData) => ({
                 url: "/signup",
                 method: "POST",
-                body: formData
+                body: formData,
+
             }),
             invalidatesTags: ["User"]
         }),
@@ -27,14 +31,15 @@ export const authSlice = createApi({
             query: () => ({
                 url: "/logout",
                 method: "POST",
+                credentials: "include"
             }),
             invalidatesTags: ["User"],
         }),
-        updateProfile: builder.mutation<IUser, FormData>({
+        updateProfile: builder.mutation<IUserProfile, FormData>({
             query: (formData) => ({
                 url: "/profile/update",
                 method: "POST",
-                body: formData
+                body: formData,
             }),
             invalidatesTags: ["User"]
         }),
@@ -47,7 +52,8 @@ export const authSlice = createApi({
             query: ({ id, formData }) => ({
                 url: `/updated/${id}`,
                 method: "PUT",
-                body: formData
+                body: formData,
+                credentials: "include"
             }),
             invalidatesTags: ["User"]
         }),

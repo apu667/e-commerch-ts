@@ -22,18 +22,18 @@ import { useGetAllOrderQuery } from "@/store/orderSlice";
 
 const AdminDashboard = () => {
   const { data, isLoading } = useGetAllOrderQuery();
-
+  console.log(data)
   if (isLoading) return <div>Loading...</div>;
 
   const orders = data?.orders || [];
-
+  console.log(orders)
   // Calculate Avg Order
   const avgOrder =
     orders.length > 0
       ? Math.round(
-          orders.reduce((acc, order) => acc + order.totalPrice, 0) /
-            orders.length
-        )
+        orders.reduce((acc, order) => acc + order.totalPrice, 0) /
+        orders.length
+      )
       : 0;
 
   const totalRevenue = data?.totalRevenue || 0;
@@ -142,7 +142,7 @@ const AdminDashboard = () => {
                   </span>
                 </TableCell>
 
-                <TableCell>{order.paymentMethod || "N/A"}</TableCell>
+                <TableCell>{"N/A"}</TableCell>
 
                 <TableCell className="text-right font-semibold">
                   ${order.totalPrice}

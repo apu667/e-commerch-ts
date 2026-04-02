@@ -3,7 +3,7 @@ import { addToCart } from "@/store/cartSlice";
 import { useGetProductsByCategoryQuery } from "@/store/catagorySlice";
 import type { CartItem } from "@/types";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Catagory = () => {
     const { id } = useParams()
@@ -29,7 +29,8 @@ const Catagory = () => {
             <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
                 {
                     data?.map((items: any) => (
-                        <div
+                        <Link
+                            to={`/product/${items._id}`}
                             key={items._id}
                             className="rounded-lg overflow-hidden flex-col bg-gray-100">
 
@@ -48,7 +49,7 @@ const Catagory = () => {
                                     onClick={() => handleAddToCart(items)}
                                     className="w-full bg-violet-500">Add to Cart</Button>
                             </div>
-                        </div>
+                        </Link>
                     ))
                 }
             </div>

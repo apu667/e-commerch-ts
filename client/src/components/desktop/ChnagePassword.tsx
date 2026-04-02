@@ -40,7 +40,7 @@ const ChangePassword = ({ openPassword, setOpenPassword }: IDialog) => {
             // Backend API call
             const response = await updateProfile(formData).unwrap();
             console.log(response)
-            toast.success(response.message || "Password changed successfully!");
+            toast.success(response?.message || "Password changed successfully!");
             setData({ oldPassword: "", newPassword: "", confirmPassword: "" });
             setOpenPassword(false);
         } catch (error: any) {

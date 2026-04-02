@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SheetCart from "./SheetCart";
 import Login from "./Login";
 import { useAppSelector } from "@/hook/hook";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -38,8 +38,8 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await logout().unwrap();
     dispatch(setUser(null));
+    await logout().unwrap();
   };
 
   return (
@@ -79,7 +79,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Avatar>
                   <AvatarImage src={user.profilePic || ""} />
-                  <AvatarFallback>{user.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+                  {/* <AvatarFallback>{user.name.slice(0, 1).toUpperCase() || "N/A"}</AvatarFallback> */}
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
