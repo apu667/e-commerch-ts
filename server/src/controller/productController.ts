@@ -288,6 +288,7 @@ export const createCheckout = async (req: Request, res: Response) => {
       metadata: {
         userId: user.userId,
         type: type,
+        quantity: quantity.toString(),
         product: type === "single" ? JSON.stringify(product) : "",
         products: type === "cart" ? JSON.stringify(products) : "",
       },
