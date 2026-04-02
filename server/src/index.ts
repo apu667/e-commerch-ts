@@ -46,45 +46,45 @@ app.post(
 
         let products: any[] = [];
 
+        // ✅ Handle both cases
         if (type === "single") {
           const singleProduct = JSON.parse(session.metadata?.product || "{}");
-          products = [
-            {
-              ...singleProduct,
-              quantity: Number(session.metadata?.quantity || 1),
-            },
-          ];
+          products = [singleProduct];
         }
 
         if (type === "cart") {
-          products = JSON.parse(session.metadata?.products || "[]").map((p: any) => ({
-            ...p,
-            quantity: Number(p.quantity || 1),
-          }));
+          products = JSON.parse(session.metadata?.products || "[]");
         }
+
+        const quantity = Number(session.metadata?.quantity || 1);
 
         if (!userId || products.length === 0) {
           console.log("❌ Missing userId or products");
           return res.sendStatus(400);
         }
 
-        const totalPrice = products.reduce((sum, item) => {
+        // ✅ format products
+        const formattedProducts = products.map((p: any) => ({
+          product: p._id || p,
+          quantity: p.quantity || quantity,
+        }));
+
+        const totalPrice = products.reduce((sum: number, item: any) => {
           const price = Number(item.price);
-          const qty = Number(item.quantity);
+          const qty = Number(item.quantity || quantity);
+          if (isNaN(price) || isNaN(qty)) return sum;
           return sum + price * qty;
         }, 0);
-
-        const totalQuantity = products.reduce((sum, item) => sum + Number(item.quantity), 0);
 
         const stripeAddress = session.customer_details?.address;
 
         const orderData = {
           user: userId,
-          products: products.map((p) => ({
-            product: p._id || p,
-            quantity: Number(p.quantity),
-          })),
-          totalQuantity,
+          products: formattedProducts,
+          totalQuantity: formattedProducts.reduce(
+            (sum: number, p: any) => sum + p.quantity,
+            0
+          ),
           totalPrice,
           paymentStatus: "paid",
           address: {
