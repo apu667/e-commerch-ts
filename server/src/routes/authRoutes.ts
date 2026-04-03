@@ -40,6 +40,6 @@ router.get(
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
-    res.redirect(process.env.FRONTEND_URL || "https://e-commerch-ts-ud3i.vercel.app/");
+    res.redirect(process.env.FRONTEND_URL || "https://e-commerch-ts-ud3i.vercel.app");
   }
 );
