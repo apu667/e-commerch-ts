@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { IOrderResponse, Order } from "@/types";
+import type { IOrderResponse, IUserOrderResponse, Order } from "@/types";
 import { BASE_URL } from "@/base_url/base_url";
 
 export const orderSlice = createApi({
@@ -14,7 +14,7 @@ export const orderSlice = createApi({
     }),
     getUserOrder: builder.query<Order[], void>({
       query: () => "/userOrder",
-      transformResponse:(res:IOrderResponse)=>res.orders
+      transformResponse:(res:IUserOrderResponse)=>res.orders
     }),
   }),
 });

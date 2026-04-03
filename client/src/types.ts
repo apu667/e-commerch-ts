@@ -101,6 +101,9 @@ export interface IOrderResponse {
   totalRevenue?: number;
   totalShipments?: number;
 }
+export interface IUserOrderResponse {
+  orders: Order[];
+}
 
 export interface Catagory {
   _id: string;
