@@ -5,9 +5,9 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useSignInMutation, useSignUpMutation } from "@/store/authSlice";
+import { useSignInMutation, useSignUpMutation, useUserProfileQuery } from "@/store/authSlice";
 import images from '../../assets/image.png'
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
@@ -19,6 +19,7 @@ interface LoginDialog {
 const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
     const [signUp] = useSignUpMutation();
     const [signIn] = useSignInMutation();
+    const { data: profile, isSuccess } = useUserProfileQuery();
     const [mode, setMode] = useState<"signup" | "signin">("signup");
     const dispatch = useDispatch()
     const [data, setData] = useState({
@@ -54,6 +55,12 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
     const handleGoogleLogin = () => {
         window.location.href = `${BASE_URL}/api/auth/google`;
     };
+    useEffect(() => {
+        if (isSuccess && profile) {
+        
+            dispatch(setUser(profile));
+        }
+    }, [isSuccess, profile, dispatch]);
     return (
         <div>
             <Dialog open={openLogin} onOpenChange={setOpenLogin}>
