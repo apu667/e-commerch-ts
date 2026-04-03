@@ -35,11 +35,12 @@ export const authSlice = createApi({
             }),
             invalidatesTags: ["User"],
         }),
-        userProfile: builder.query<ISignleUserResposne, void>({
+        userProfile: builder.query<IUser, void>({
             query: () => ({
                 url: "/profile",
                 method: "GET",
             }),
+            transformResponse: (res: ISignleUserResposne) => res.user,
             providesTags: ["User"]
         }),
         updateProfile: builder.mutation<IUserProfile, FormData>({

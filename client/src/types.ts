@@ -134,8 +134,7 @@ export interface IUserResponse {
   user: IUser[]
 }
 export interface IUserProfile {
-  user: IUser,
-  message:string
+  user: IUser;
 }
 
 export interface ISignleUserResposne {
