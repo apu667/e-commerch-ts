@@ -45,7 +45,10 @@ export const userOrder = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const orders = await Order.find({ user: user.userId });
+  const orders = await Order.find({ user: user.userId }).populate({
+    path: "products.product", // populate the "product" field inside each item of products array
+    select: "name images price category", // only fields you want
+  })
 
   return res.status(200).json({
     success: true,
