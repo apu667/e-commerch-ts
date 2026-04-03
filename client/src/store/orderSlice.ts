@@ -13,7 +13,7 @@ export const orderSlice = createApi({
       query: () => "/all",
     }),
     getUserOrder: builder.query<Order[], void>({
-      query: () => "/all",
+      query: () => "/userOrder",
       transformResponse:(res:IOrderResponse)=>res.orders
     }),
   }),
