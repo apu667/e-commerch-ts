@@ -1,145 +1,93 @@
-import {
-    Dialog,
-    DialogContent,
-} from "@/components/ui/dialog"
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
-
-import { useSignInMutation, useSignUpMutation, useUserProfileQuery } from "@/store/authSlice";
-import images from '../../assets/image.png'
 import { useDispatch } from "react-redux";
+import {
+  useSignInMutation,
+  useSignUpMutation,
+  useUserProfileQuery,
+} from "@/store/authSlice";
 import { setUser } from "@/store/userSlice";
 import { BASE_URL } from "@/base_url/base_url";
-interface LoginDialog {
-    openLogin: boolean;
-    setOpenLogin: (open: boolean) => void;
-}
-const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
-    const [signUp] = useSignUpMutation();
-    const [signIn] = useSignInMutation();
-    const { data: profile, isSuccess } = useUserProfileQuery();
-    const [mode, setMode] = useState<"signup" | "signin">("signup");
-    const dispatch = useDispatch()
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        password: "",
-    });
-    const [error, setError] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
-    };
+const Login = () => {
+  const dispatch = useDispatch();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError("");
-        try {
-            console.log(data)
-            // 🔥 Correct usage of mutation
-            const res = mode === "signup" ? await signUp(data).unwrap() : await signIn(data).unwrap()
-            // Redirect after successful signup
-            dispatch(setUser(res.user))
-            setOpenLogin(false)
-        } catch (err: any) {
-            console.error("Signup failed:", err);
-            setError(err?.data?.message || "Signup failed. Please try again.");
-        }
-    };
+  const [signIn] = useSignInMutation();
+  const [signUp] = useSignUpMutation();
 
-    const handleGoogleLogin = () => {
-        window.location.href = `${BASE_URL}/api/auth/google`;
-    };
-    useEffect(() => {
-        if (profile) {
-            console.log("apu")
-            dispatch(setUser(profile)); 
-        }
-    }, [profile, dispatch, isSuccess]);
-    return (
-        <div>
-            <Dialog open={openLogin} onOpenChange={setOpenLogin}>
+  const { data: profile, refetch } = useUserProfileQuery();
 
-                <DialogContent className="md:min-w-3xl">
-                    <div className="grid grid-cols-1 md:grid-cols-2 divide">
-                        <div className="border-r p-4 flex-col space-y-4 hidden md:block">
-                            <h3 className="text-2xl leading-tight font-semibold text-blue-500">SignUp</h3>
-                            <div className="flex items-center justify-center">
-                                <img
-                                    className="object-cover h-86 w-auto"
-                                    src={images} alt="" />
-                            </div>
-                        </div>
-                        <div>
-                            <h3 className="text-center text-2xl font-bold">{mode === "signup" ? "SignUp" : "SignIn"}</h3>
-                            <form className="p-6 flex-col space-y-4" onSubmit={handleSubmit}>
-                                {
-                                    mode === "signup" && (
-                                        <div className="flex-col space-y-2">
-                                            <Label htmlFor="name">Name</Label>
-                                            <Input
-                                                name="name"
-                                                value={data.name}
-                                                onChange={handleChange}
-                                                placeholder="name.."
-                                            />
-                                        </div>
-                                    )
-                                }
-                                <div className="flex-col space-y-2">
-                                    <Label htmlFor="email">Your email address</Label>
-                                    <Input
-                                        name="email"
-                                        value={data.email}
-                                        onChange={handleChange}
-                                        placeholder="email.."
-                                    />
-                                </div>
-                                <div className="flex-col space-y-2">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Input
-                                        name="password"
-                                        type="password"
-                                        value={data.password}
-                                        onChange={handleChange}
-                                        placeholder="password"
-                                    />
-                                </div>
+  const [mode, setMode] = useState<"signup" | "signin">("signin");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-                                {error && <p className="text-red-500">{error}</p>}
+  // 🔥 profile আসলে Redux এ set হবে
+  useEffect(() => {
+    if (profile) {
+      dispatch(setUser(profile));
+    }
+  }, [profile, dispatch]);
 
-                                <p>
-                                    {mode === "signup"
-                                        ? "Already have an account? "
-                                        : "Don't have an account? "}
-                                    <span
-                                        className="text-blue-500 cursor-pointer"
-                                        onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-                                    >
-                                        {mode === "signup" ? "Sign In" : "Sign Up"}
-                                    </span>
-                                </p>
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-                                <div className="flex-col space-y-2">
-                                    <Button type="submit" className="w-full">
-                                        {mode === "signup" ? "SignUp" : "SignIn"}
-                                    </Button>
-                                    <Button type="button" className="w-full" onClick={handleGoogleLogin}>
-                                        {mode === "signup" ? "SignUp" : "SignIn"} with Google
-                                    </Button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
-        </div>
-    )
-}
+    try {
+      if (mode === "signin") {
+        await signIn(form).unwrap();
+      } else {
+        await signUp(form).unwrap();
+      }
 
-export default Login
+      await refetch(); // 🔥 important
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${BASE_URL}/api/auth/google`;
+  };
+
+  return (
+    <div>
+      <h2>{mode === "signin" ? "Login" : "Register"}</h2>
+
+      <form onSubmit={handleSubmit}>
+        {mode === "signup" && (
+          <input
+            placeholder="name"
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+        )}
+
+        <input
+          placeholder="email"
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+
+        <input
+          placeholder="password"
+          type="password"
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+        />
+
+        <button type="submit">
+          {mode === "signin" ? "Login" : "Signup"}
+        </button>
+      </form>
+
+      <button onClick={handleGoogleLogin}>
+        Continue with Google
+      </button>
+
+      <p onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
+        Switch Mode
+      </p>
+    </div>
+  );
+};
+
+export default Login;
