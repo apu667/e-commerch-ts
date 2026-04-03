@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLogoutMutation } from "@/store/authSlice";
+import { useLogoutMutation, useUserProfileQuery } from "@/store/authSlice";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 
@@ -21,6 +21,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
+  const {data}=useUserProfileQuery();
+  console.log(data)
 
   const cart = useAppSelector((i) => i.cart.cart);
   const user = useAppSelector((state) => state.user.user);

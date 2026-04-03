@@ -51,8 +51,20 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
         }
     };
 
-    const handleGoogleLogin = () => {
-        window.location.href = `${BASE_URL}/api/auth/google`;
+    const handleGoogleLogin = async () => {
+        try {
+            // 1. Redirect না করে, window.open করে token বা user data fetch করতে পারো
+            const res = await fetch(`${BASE_URL}/api/auth/google/success`, {
+                credentials: "include", // cookie পাঠানোর জন্য যদি session use করো
+            });
+            const data = await res.json();
+            console.log(data)
+            // 2. Redux এ setUser কল করা
+            dispatch(setUser(data.user));
+
+        } catch (err) {
+            console.error("Google login failed", err);
+        }
     };
     return (
         <div>
