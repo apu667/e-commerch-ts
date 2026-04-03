@@ -111,7 +111,7 @@ app.post(
 // ------------------------------
 // Normal middlewares for all other routes
 // ------------------------------
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://e-commerch-ts-ud3i.vercel.app", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
