@@ -1,4 +1,26 @@
-// src/lib/utils.ts
-export function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+// // src/lib/utils.ts
+// export function cn(...classes: string[]) {
+//   return classes.filter(Boolean).join(" ");
+// }
+
+// export function cn(...inputs: (string | undefined | false | null)[]) {
+//   return inputs.filter(Boolean).join(" ");
+// }
+
+export function cn(...inputs: any[]) {
+  return inputs
+    .flatMap((input) => {
+      if (!input) return []
+
+      if (typeof input === "string") return [input]
+
+      if (typeof input === "object") {
+        return Object.entries(input)
+          .filter(([_, value]) => Boolean(value))
+          .map(([key]) => key)
+      }
+
+      return []
+    })
+    .join(" ")
 }
