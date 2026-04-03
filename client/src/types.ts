@@ -136,7 +136,11 @@ export interface IUserResponse {
 export interface IUserProfile {
   user: IUser;
 }
-
+export interface IUserProfileResponse {
+  success: boolean;
+  message: string;
+  user: IUser;
+}
 export interface ISignleUserResposne {
   user: IUser
 }

@@ -23,7 +23,6 @@ const Navbar = () => {
   const [logout] = useLogoutMutation();
 
 
-
   const cart = useAppSelector((i) => i.cart.cart);
   const user = useAppSelector((state) => state.user.user);
 

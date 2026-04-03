@@ -1,93 +1,173 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
-  useSignInMutation,
-  useSignUpMutation,
-  useUserProfileQuery,
-} from "@/store/authSlice";
+    Dialog,
+    DialogContent,
+} from "@/components/ui/dialog"
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { useEffect, useState } from "react";
+
+import { useSignInMutation, useSignUpMutation, useUserProfileQuery } from "@/store/authSlice";
+import images from '../../assets/image.png'
+import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { BASE_URL } from "@/base_url/base_url";
 
-const Login = () => {
-  const dispatch = useDispatch();
+interface LoginDialog {
+    openLogin: boolean;
+    setOpenLogin: (open: boolean) => void;
+}
 
-  const [signIn] = useSignInMutation();
-  const [signUp] = useSignUpMutation();
+const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
 
-  const { data: profile, refetch } = useUserProfileQuery();
+    const [signUp] = useSignUpMutation();
+    const [signIn] = useSignInMutation();
 
-  const [mode, setMode] = useState<"signup" | "signin">("signin");
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+    // 🔥 IMPORTANT: add refetch
+    const { data: profile, refetch } = useUserProfileQuery();
+    console.log(profile)
+    const [mode, setMode] = useState<"signup" | "signin">("signup");
 
-  // 🔥 profile আসলে Redux এ set হবে
-  useEffect(() => {
-    if (profile) {
-      dispatch(setUser(profile));
-    }
-  }, [profile, dispatch]);
+    const dispatch = useDispatch()
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+    const [data, setData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    });
 
-    try {
-      if (mode === "signin") {
-        await signIn(form).unwrap();
-      } else {
-        await signUp(form).unwrap();
-      }
+    const [error, setError] = useState("");
 
-      await refetch(); // 🔥 important
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setData({
+            ...data,
+            [e.target.name]: e.target.value,
+        });
+    };
 
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    // 🔥 FIXED LOGIN/SIGNUP
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError("");
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${BASE_URL}/api/auth/google`;
-  };
+        try {
+            const res = mode === "signup"
+                ? await signUp(data).unwrap()
+                : await signIn(data).unwrap();
 
-  return (
-    <div>
-      <h2>{mode === "signin" ? "Login" : "Register"}</h2>
+            // ✅ set user immediately
+            dispatch(setUser(res.user));
 
-      <form onSubmit={handleSubmit}>
-        {mode === "signup" && (
-          <input
-            placeholder="name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        )}
+            // 🔥 VERY IMPORTANT: profile refetch
+            await refetch();
 
-        <input
-          placeholder="email"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
+            setOpenLogin(false);
 
-        <input
-          placeholder="password"
-          type="password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
+        } catch (err: any) {
+            console.error(err);
+            setError(err?.data?.message || "Something went wrong");
+        }
+    };
 
-        <button type="submit">
-          {mode === "signin" ? "Login" : "Signup"}
-        </button>
-      </form>
+    // 🔥 GOOGLE LOGIN
+    const handleGoogleLogin = () => {
+        window.location.href = `${BASE_URL}/api/auth/google`;
+    };
 
-      <button onClick={handleGoogleLogin}>
-        Continue with Google
-      </button>
+    // 🔥 PROFILE → REDUX SET
+    useEffect(() => {
+        if (profile) {
+            console.log("PROFILE:", profile); // debug
+            dispatch(setUser(profile));
+        }
+    }, [profile, dispatch]);
 
-      <p onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
-        Switch Mode
-      </p>
-    </div>
-  );
-};
+    return (
+        <div>
+            <Dialog open={openLogin} onOpenChange={setOpenLogin}>
+
+                <DialogContent className="md:min-w-3xl">
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide">
+                        <div className="border-r p-4 flex-col space-y-4 hidden md:block">
+                            <h3 className="text-2xl leading-tight font-semibold text-blue-500">SignUp</h3>
+                            <div className="flex items-center justify-center">
+                                <img
+                                    className="object-cover h-86 w-auto"
+                                    src={images} alt="" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 className="text-center text-2xl font-bold">
+                                {mode === "signup" ? "SignUp" : "SignIn"}
+                            </h3>
+
+                            <form className="p-6 flex-col space-y-4" onSubmit={handleSubmit}>
+
+                                {mode === "signup" && (
+                                    <div className="flex-col space-y-2">
+                                        <Label htmlFor="name">Name</Label>
+                                        <Input
+                                            name="name"
+                                            value={data.name}
+                                            onChange={handleChange}
+                                            placeholder="name.."
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="flex-col space-y-2">
+                                    <Label htmlFor="email">Your email address</Label>
+                                    <Input
+                                        name="email"
+                                        value={data.email}
+                                        onChange={handleChange}
+                                        placeholder="email.."
+                                    />
+                                </div>
+
+                                <div className="flex-col space-y-2">
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input
+                                        name="password"
+                                        type="password"
+                                        value={data.password}
+                                        onChange={handleChange}
+                                        placeholder="password"
+                                    />
+                                </div>
+
+                                {error && <p className="text-red-500">{error}</p>}
+
+                                <p>
+                                    {mode === "signup"
+                                        ? "Already have an account? "
+                                        : "Don't have an account? "}
+                                    <span
+                                        className="text-blue-500 cursor-pointer"
+                                        onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+                                    >
+                                        {mode === "signup" ? "Sign In" : "Sign Up"}
+                                    </span>
+                                </p>
+
+                                <div className="flex-col space-y-2">
+                                    <Button type="submit" className="w-full">
+                                        {mode === "signup" ? "SignUp" : "SignIn"}
+                                    </Button>
+
+                                    <Button type="button" className="w-full" onClick={handleGoogleLogin}>
+                                        {mode === "signup" ? "SignUp" : "SignIn"} with Google
+                                    </Button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+    )
+}
 
 export default Login;

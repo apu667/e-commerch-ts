@@ -1,5 +1,5 @@
 import { BASE_URL } from '@/base_url/base_url';
-import type { ISignleUserResposne, IUser, IUserProfile, IUserResponse, SignInForm, SignUpForm } from '@/types';
+import type { ISignleUserResposne, IUser, IUserProfile, IUserProfileResponse, IUserResponse, SignInForm, SignUpForm } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const authSlice = createApi({
@@ -40,7 +40,7 @@ export const authSlice = createApi({
                 url: "/profile",
                 method: "GET",
             }),
-            transformResponse: (res: ISignleUserResposne) => res.user,
+            transformResponse: (res: IUserProfileResponse) => res.user,
             providesTags: ["User"]
         }),
         updateProfile: builder.mutation<IUserProfile, FormData>({
