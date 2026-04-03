@@ -282,8 +282,8 @@ export const createCheckout = async (req: Request, res: Response) => {
         enabled: true,
       },
 
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://e-commerch-ts-ud3i.vercel.app/success",
+      cancel_url: "https://e-commerch-ts-ud3i.vercel.app/cancel",
 
       metadata: {
         userId: user.userId,
