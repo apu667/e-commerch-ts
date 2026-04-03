@@ -255,7 +255,7 @@ export const createCheckout = async (req: Request, res: Response) => {
           product_data: {
             name: item.name,
             images: Array.isArray(item.images)
-              ? [item.images[0]]
+              ? [item.images]
               : [item.images], // fix nested issue
           },
           unit_amount: item.price * 100,
