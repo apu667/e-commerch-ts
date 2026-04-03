@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { allUser, deletedUser, logoutUser, SignIn, SignUp, updatedUser, updatedUserProfile } from "../controller/userController";
+import { allUser, deletedUser, logoutUser, SignIn, SignUp, updatedUser, updatedUserProfile, userProfile } from "../controller/userController";
 import passport from "passport";
 import { authorization } from "../middleware/auth";
 import { upload } from "../middleware/multer";
@@ -10,6 +10,8 @@ router.post("/auth/signup", SignUp);
 router.post("/auth/signin", SignIn);
 router.post("/auth/logout", authorization, logoutUser);
 
+router.get("/auth/profile", authorization, userProfile);
+router.post("/auth/profile/update", authorization, upload.single("profilePic"), updatedUserProfile);
 router.post("/auth/profile/update", authorization, upload.single("profilePic"), updatedUserProfile);
 router.get("/auth/all", allUser);
 router.put("/auth/updated/:id", updatedUser);

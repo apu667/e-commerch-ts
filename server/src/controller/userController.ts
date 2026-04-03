@@ -208,3 +208,31 @@ export const logoutUser = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Logout successful" });
 };
+
+export const userProfile = async (req: Request, res: Response) => {
+    const userId = (req as AuthRequest).user;
+
+    const findUser = await User.findById(userId?.userId);
+    if (!findUser) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized"
+        })
+    }
+    try {
+        const user = await User.findById(findUser).select("-password");
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "user is not found"
+            })
+        }
+        return res.status(201).json({
+            success: true,
+            message: "user profile resived successFully",
+            user
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}

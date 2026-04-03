@@ -5,18 +5,20 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useSignInMutation, useSignUpMutation } from "@/store/authSlice";
+import { useSignInMutation, useSignUpMutation, useUserProfileQuery } from "@/store/authSlice";
 import images from '../../assets/image.png'
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { BASE_URL } from "@/base_url/base_url";
+import axios from "axios";
 interface LoginDialog {
     openLogin: boolean;
     setOpenLogin: (open: boolean) => void;
 }
 const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
+    const { data: user } = useUserProfileQuery();
     const [signUp] = useSignUpMutation();
     const [signIn] = useSignInMutation();
     const [mode, setMode] = useState<"signup" | "signin">("signup");
@@ -51,9 +53,26 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
         }
     };
 
-    const handleGoogleLogin = () => {
-        window.location.href = `${BASE_URL}/api/auth/google`;
-    };
+    useEffect(() => {
+        const fetchGoogleUser = async () => {
+            try {
+                const res = await axios.get(`${BASE_URL}/api/auth/google/callback`, {
+                    withCredentials: true
+                });
+                const data = res.data; // <-- এখানে user + token আছে
+                if (data.user && data.token) {
+                    dispatch(setUser(data.user));
+                    setOpenLogin(false);
+                }
+            } catch (err) {
+                console.error("Google login failed", err);
+            }
+        };
+
+        if (window.location.pathname === "/google/callback") {
+            fetchGoogleUser();
+        }
+    }, []);
     return (
         <div>
             <Dialog open={openLogin} onOpenChange={setOpenLogin}>

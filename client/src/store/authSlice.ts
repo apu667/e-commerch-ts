@@ -35,6 +35,13 @@ export const authSlice = createApi({
             }),
             invalidatesTags: ["User"],
         }),
+        userProfile: builder.query<ISignleUserResposne, void>({
+            query: () => ({
+                url: "/profile",
+                method: "GET",
+            }),
+            providesTags: ["User"]
+        }),
         updateProfile: builder.mutation<IUserProfile, FormData>({
             query: (formData) => ({
                 url: "/profile/update",
@@ -67,4 +74,4 @@ export const authSlice = createApi({
     })
 })
 
-export const { useSignUpMutation, useSignInMutation, useAllUserQuery, useUpdatedUserMutation, useDeletedUserMutation, useUpdateProfileMutation, useLogoutMutation } = authSlice
+export const { useSignUpMutation, useSignInMutation, useAllUserQuery, useUpdatedUserMutation, useDeletedUserMutation, useUpdateProfileMutation, useLogoutMutation, useUserProfileQuery } = authSlice
