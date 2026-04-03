@@ -254,9 +254,7 @@ export const createCheckout = async (req: Request, res: Response) => {
           currency: "usd",
           product_data: {
             name: item.name,
-            images: Array.isArray(item.images)
-              ? [item.images[0]]
-              : [item.images], // fix nested issue
+            images: [item.images?.[0]]
           },
           unit_amount: item.price * 100,
         },
