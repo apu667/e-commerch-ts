@@ -56,11 +56,11 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
         window.location.href = `${BASE_URL}/api/auth/google`;
     };
     useEffect(() => {
-        if (isSuccess && profile) {
-        
-            dispatch(setUser(profile));
+        if (profile) {
+            console.log("apu")
+            dispatch(setUser(profile)); 
         }
-    }, [isSuccess, profile, dispatch]);
+    }, [profile, dispatch, isSuccess]);
     return (
         <div>
             <Dialog open={openLogin} onOpenChange={setOpenLogin}>
