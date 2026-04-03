@@ -32,14 +32,14 @@ router.get(
     if (!req.user) return res.redirect("/login");
 
     // Safe cast to any
-    const { user, token } = req.user as any;
+    const { token } = req.user as any;
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      sameSite: 'none',
+      secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
-    res.redirect(process.env.FRONTEND_URL || "http://localhost:5173");
+    res.redirect(process.env.FRONTEND_URL || "https://e-commerch-ts-ud3i.vercel.app/");
   }
 );

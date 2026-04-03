@@ -37,6 +37,7 @@ export const findAllOrder = async (req: Request, res: Response) => {
     console.log(error)
   }
 }
+
 export const userOrder = async (req: Request, res: Response) => {
   const user = (req as AuthRequest).user;
 
@@ -44,20 +45,11 @@ export const userOrder = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const order = await Order.find({ user: user.userId });
-
-  console.log(order);
-
-  if (!order || order.length === 0) {
-    return res.status(404).json({
-      success: false,
-      message: "Order is not found"
-    });
-  }
+  const orders = await Order.find({ user: user.userId });
 
   return res.status(200).json({
     success: true,
-    message: "User all orders fetched successfully",
-    order
+    message: "User orders fetched successfully",
+    orders, // empty array হলেও ok
   });
 };
