@@ -11,7 +11,7 @@ import { useSignInMutation, useSignUpMutation, useUserProfileQuery } from "@/sto
 import images from '../../assets/image.png'
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
-import { BASE_URL } from "@/base_url/base_url";
+
 
 interface LoginDialog {
     openLogin: boolean;
@@ -70,10 +70,10 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
         }
     };
 
-    // 🔥 GOOGLE LOGIN
-    const handleGoogleLogin = () => {
-        window.location.href = `${BASE_URL}/api/auth/google`;
-    };
+    // // 🔥 GOOGLE LOGIN
+    // const handleGoogleLogin = () => {
+    //     window.location.href = `${BASE_URL}/api/auth/google`;
+    // };
 
     // 🔥 PROFILE → REDUX SET
     useEffect(() => {
