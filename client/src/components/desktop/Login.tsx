@@ -26,6 +26,7 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
     // 🔥 IMPORTANT: add refetch
     const { data: profile, refetch } = useUserProfileQuery();
     console.log(profile)
+    console.log("apu")
     const [mode, setMode] = useState<"signup" | "signin">("signup");
 
     const dispatch = useDispatch()
@@ -156,9 +157,9 @@ const Login = ({ openLogin, setOpenLogin }: LoginDialog) => {
                                         {mode === "signup" ? "SignUp" : "SignIn"}
                                     </Button>
 
-                                    <Button type="button" className="w-full" onClick={handleGoogleLogin}>
+                                    {/* <Button type="button" className="w-full" onClick={handleGoogleLogin}>
                                         {mode === "signup" ? "SignUp" : "SignIn"} with Google
-                                    </Button>
+                                    </Button> */}
                                 </div>
 
                             </form>

@@ -39,7 +39,7 @@ const SheetCart = ({ open, setOpen }: CartDialog) => {
           type: "cart",
           products: cart
         }, {
-        withCredentials: true, // ✅ এইটা লাগবে cookie পাঠানোর জন্য
+        withCredentials: true,
       }
       );
       window.location.href = data.url; // <-- session.url
